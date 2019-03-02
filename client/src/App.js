@@ -8,8 +8,6 @@ import * as Tts from './tts/tts'
 class App extends Component {
 
     render() {
-        // Api.sendMessage("hello", function() {}, function() {});
-        Tts.textToSpeech("Hello!", function() {console.log("DONE")});
         return (
             <>
                 <Header/>
