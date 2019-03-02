@@ -7,7 +7,7 @@ export default class Logo extends React.Component {
     render() {
         return (
             <LogoDiv>
-                <img src={LogoRaw} />
+                <img alt="Quikr chat logo" src={LogoRaw} width="161" height="81" />
             </LogoDiv>
         )
     }
