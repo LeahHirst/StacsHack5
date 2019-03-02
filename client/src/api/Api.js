@@ -1,9 +1,7 @@
 import {Component} from "react";
 
 export function sendMessage(message, callback) {
-    this.requestWithCallback("POST", process.env.REACT_APP_SERVER_BASE + "message", callback, {
-        "message": message
-    })
+    this.requestWithCallback("GET", process.env.REACT_APP_SERVER_BASE + "message?message=" + message, callback)
 }
 
 export function requestWithCallback(method, url, onSuccess, onError, data = null) {
