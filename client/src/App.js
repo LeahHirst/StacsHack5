@@ -4,22 +4,25 @@ import {MainPage} from "./views";
 
 class App extends Component {
 
-    getMessage(callback) {
-        get(".../message", callback)
+    sendMessage(message, callback) {
+        this.requestWithCallback("POST", process.env.REACT_APP_SERVER_BASE + "message", callback, {
+            "message": message
+        })
     }
 
-    get(url, callback) {
+    requestWithCallback(method, url, callback, data=null) {
         let xmlHttp = new XMLHttpRequest();
         xmlHttp.onreadystatechange = function () {
             if (xmlHttp.readyState === 4 && xmlHttp.status === 200)
                 callback(xmlHttp.responseText);
         };
 
-        xmlHttp.open("GET", url, true); // true for asynchronous
-        xmlHttp.send(null);
+        xmlHttp.open(method, url, true); // true for asynchronous
+        xmlHttp.send(data);
     }
 
     render() {
+        console.log(process.env.REACT_APP_SERVER_BASE);
         return (
             <MainPage/>
         );
