@@ -1,8 +1,19 @@
 import React, {Component} from 'react';
 import './App.css';
 import {MainPage} from "./views";
+import React, { Component } from 'react';
+import { Logo, Header } from './components';
+import ChatContainer from './components/ChatContainer';
 
 class App extends Component {
+  render() {
+    return (
+      <>
+      <Header />
+      <ChatContainer />
+      </>
+    );
+  }
 
     sendMessage(message, callback) {
         this.requestWithCallback("POST", process.env.REACT_APP_SERVER_BASE + "message", callback, {
