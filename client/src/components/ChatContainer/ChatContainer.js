@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { MessageBox } from '..';
 import SuggestionList from '../SuggestionList/SuggestionList';
 import { startTranscribing } from '../../api/Transcription';
+import * as Tts from '../../tts/tts';
 
 export default class ChatContainer extends React.Component {
     constructor(props) {
@@ -28,11 +29,17 @@ export default class ChatContainer extends React.Component {
         })
     }
 
+    speakSuggestion(suggestion) {
+        Tts.textToSpeech(suggestion, function() {
+            // Finished
+        });
+    }
+
     render() {
         return (
             <ChatContainerDiv>
                 <MessageBox message={this.state.message} listening={this.state.listening} />
-                <SuggestionList suggestions={[ 'Good, thanks!', 'Not too bad' ]} />
+                <SuggestionList suggestions={[ 'Good, thanks!', 'Not too bad' ]} applySuggestion={this.speakSuggestion.bind(this)} />
             </ChatContainerDiv>
         )
     }
