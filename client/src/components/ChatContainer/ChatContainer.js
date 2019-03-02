@@ -1,12 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 import { MessageBox } from '..';
+import SuggestionList from '../SuggestionList/SuggestionList';
 
 export default class ChatContainer extends React.Component {
     render() {
         return (
             <ChatContainerDiv>
                 <MessageBox message="Hello Adam, how are" listening={true} />
+                <SuggestionList suggestions={[ 'Good, thanks!', 'Not too bad' ]} />
             </ChatContainerDiv>
         )
     }
