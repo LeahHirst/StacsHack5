@@ -2,12 +2,36 @@ import React from 'react';
 import styled from 'styled-components';
 import { MessageBox } from '..';
 import SuggestionList from '../SuggestionList/SuggestionList';
+import { startTranscribing } from '../../api/Transcription';
 
 export default class ChatContainer extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            listening: true,
+            message: ''
+        }
+
+        startTranscribing(result => {
+            if (result.type == 'interim') {
+                this.setState({
+                    listening: true,
+                    message: result.message
+                });
+            } else {
+                this.setState({
+                    listening: false,
+                    message: result.message
+                })
+            }
+        })
+    }
+
     render() {
         return (
             <ChatContainerDiv>
-                <MessageBox message="Hello Adam, how are" listening={true} />
+                <MessageBox message={this.state.message} listening={this.state.listening} />
                 <SuggestionList suggestions={[ 'Good, thanks!', 'Not too bad' ]} />
             </ChatContainerDiv>
         )
