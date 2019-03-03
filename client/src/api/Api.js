@@ -1,7 +1,7 @@
 import {Component} from "react";
 
-export function sendMessage(message, callback) {
-    this.requestWithCallback("GET", process.env.REACT_APP_SERVER_BASE + "message?message=" + message, callback)
+export function getSuggestions(message, callback) {
+    this.requestWithCallback("GET", process.env.REACT_APP_SERVER_BASE + "api?message=" + message, callback)
 }
 
 export function requestWithCallback(method, url, onSuccess, onError, data = null) {
@@ -9,7 +9,7 @@ export function requestWithCallback(method, url, onSuccess, onError, data = null
     xmlHttp.onreadystatechange = function () {
         if (xmlHttp.readyState === 4) {
             if (xmlHttp.status === 200) {
-                onSuccess(xmlHttp.responseText)
+                onSuccess(JSON.parse(xmlHttp.responseText))
             } else if (xmlHttp > 299) {
                 onError(xmlHttp.responseText)
             }
