@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
   // input + 2 to get all the rest of the arguments
   ModelStorage* modelPtr = reinterpret_cast<ModelStorage*>(loadModel(fileDir, words, 3));
 
-  PredictionOutput* output = reinterpret_cast<PredictionOutput*>(predict(modelPtr, const_cast<const char**>(argv) + 2, argc - 1));
+  PredictionOutput* output = reinterpret_cast<PredictionOutput*>(predict(modelPtr, const_cast<const char**>(argv) + 2, argc - 2));
 
   for (int i = 0; i < output->results_length; i++) {
     std::cout << output->results[i]->text << ", " << output->results[i]->score << std::endl;
