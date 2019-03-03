@@ -1,23 +1,4 @@
-#include "tensorflow/lite/model.h"
-#include "tensorflow/lite/models/smartreply/predictor.h"
-
-using tflite::custom::smartreply::GetSegmentPredictions;
-using tflite::custom::smartreply::PredictorResponse;
-
-struct ModelStorage {
-    std::vector<std::string> backoff_list;
-    std::unique_ptr<::tflite::FlatBufferModel> model;
-};
-
-struct Prediction {
-    const char* text;
-    float score;
-};
-
-struct PredictionOutput {
-    Prediction** results;
-    int results_length;
-};
+#include "tf_wrapper.h"
 
 static std::vector<std::string> castCharArrToStringVec(const char** input, const int input_length) {
     std::vector<std::string> vec = std::vector<std::string>();
