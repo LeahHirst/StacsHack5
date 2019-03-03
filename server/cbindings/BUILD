@@ -13,6 +13,16 @@ filegroup(
 )
 
 cc_binary(
+    name = "test",
+    deps = [
+         ":tf_wrapper_lib",
+    ],
+    srcs = [
+        "main.cc",
+    ],
+)
+
+cc_binary(
     name = "tf_wrapper.so",
     deps = [
         ":tf_wrapper_lib",
@@ -24,6 +34,9 @@ cc_library(
     name = "tf_wrapper_lib",
     srcs = [
         "tf_wrapper.cc",
+    ],
+    hdrs = [
+         "tf_wrapper.h"
     ],
     copts = tflite_copts(),
     linkopts = [

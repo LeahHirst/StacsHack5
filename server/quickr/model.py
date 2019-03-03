@@ -1,27 +1,49 @@
 import tensorflow as tf
+import ctypes
 
-def run_on_model(model_path: str, message_data: str):
-    interpreter = tf.lite.Interpreter(model_path=model_path)
-    interpreter.allocate_tensors()
+class Prediction:
+    text: str
+    score: float
 
-    input_details = interpreter.get_input_details()
-    output_details = interpreter.get_output_details()
+    def __init__(self, text: str, score: float):
+        self.text = text
+        self.score = score
 
-    input_shape = input_details[0]['shape']
 
-    input_data = message_data.split(' ')
+class PredictionOutput:
+    predictions: list
+    length: int
 
-    interpreter.set_tensor(input_details[0]['index'], input_data)
+    def __init__(self, predictions: list):
+        self.predictions = predictions
+        self.length = len(predictions)
 
-    interpreter.invoke()
 
-    output_data = interpreter.get_tensor(output_details[0]['index'])
+def call_c(L):
+    arr = (ctypes.c_char_p * len(L))()
 
-    print(output_data)
+    for i in range(0, len(L)):
+        arr[i] = bytes(L[i], 'utf-8')
 
+    return arr, len(L)
+
+
+def run_on_model(model: str, message_data: str):
+    lib = ctypes.CDLL("../cbindings/tf_wrapper.so", mode=ctypes.RTLD_GLOBAL)
+
+    strings = ['Ok', 'Yes', 'Null']
+    strings_x, strings_x_length = call_c(strings)
+
+    model = lib.loadModel(model, strings_x, strings_x_length)
+
+    words, words_length = call_c(message_data.split(' '))
+
+    ptr = lib.predict(model, words, words_length)
+
+    print(ptr)
 
 def main():
-    run_on_model("../../model/smartreply.tflite", "Hello how are you doing?")
+    run_on_model("../../model/smartreply.tflite", "Hello how are you doing")
 
 if __name__ == "__main__":
     main()
