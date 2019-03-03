@@ -57,6 +57,18 @@ extern "C" void* predict(void* storage_ptr, const char** input_words, const int 
     return output;
 }
 
+extern "C" void unloadPrediction(void* ptr) {
+    if (ptr != 0) {
+        PredictionOutput* output = reinterpret_cast<PredictionOutput*>(ptr);
+        
+        for (int i = 0; i < output->results_length; i++) {
+            delete output->results[i];
+        }
+
+        delete output;
+    }
+}
+
 extern "C" void unload(void* storage_ptr) {
     if (storage_ptr != 0) {
         ModelStorage* storage = reinterpret_cast<ModelStorage*>(storage_ptr);
