@@ -84,5 +84,4 @@ padding: 20px;
 text-align: center;
 margin: auto;
 max-width: 700px;
-width: 100%;
 `;
