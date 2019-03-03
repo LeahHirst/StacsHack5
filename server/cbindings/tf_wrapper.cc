@@ -14,6 +14,11 @@ struct Prediction {
     float score;
 };
 
+struct PredictionOutput {
+    Prediction** results;
+    int results_length;
+};
+
 static std::vector<std::string> castCharArrToStringVec(const char** input, const int input_length) {
     std::vector<std::string> vec = std::vector<std::string>();
     for (int i = 0; i < input_length; i++) {        
@@ -39,14 +44,17 @@ extern "C" void* predict(void* storage_ptr, const char** input_words, const int 
     GetSegmentPredictions(castCharArrToStringVec(input_words, input_text_length), *storage->model, storage->backoff_list, &responses);
 
     Prediction** predictions = new Prediction*[responses.size()];
+    PredictionOutput* output = new PredictionOutput();
+    output->results_length = responses.size();
     for (int i = 0; i < responses.size(); i++) {
         Prediction* pred = new Prediction();
         pred->text = responses[i].GetText().data();
         pred->score = responses[i].GetScore();
         predictions[i] = pred;
     }
+    output->results = predictions;
 
-    return predictions;
+    return output;
 }
 
 extern "C" void unload(void* storage_ptr) {
