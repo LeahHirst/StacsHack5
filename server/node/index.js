@@ -7,12 +7,19 @@ const script = '/Users/adamhirst/tensorflow/bazel-bin/tensorflow/lite/models/sma
 
 app.get('/api', (req, res) => {
     const message = req.query.message;
+    let responded = false;
     predict(message, (success) => {
+        if (responded) return;
+        responded = true;
         res.send(success);
     }, (err) => {
+        if (responded) return;
+        responded = true;
         res.send(err);
     })
 });
+
+app.use(express.static('../../client/build'));
 
 
 function predict(message, callback, err) {

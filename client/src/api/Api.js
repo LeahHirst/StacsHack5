@@ -1,7 +1,7 @@
 import {Component} from "react";
 
 export function getSuggestions(message, callback) {
-    this.requestWithCallback("GET", process.env.REACT_APP_SERVER_BASE + "api?message=" + message, callback)
+    requestWithCallback("GET", "/api?message=" + message, callback)
 }
 
 export function requestWithCallback(method, url, onSuccess, onError, data = null) {

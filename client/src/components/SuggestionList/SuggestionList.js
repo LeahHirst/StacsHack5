@@ -16,6 +16,7 @@ export default class SuggestionList extends React.Component {
 
 const SuggestionListDiv = styled.div`
 display: flex;
+flex-wrap: wrap;
 overflow: hidden;
 margin-top: 10px;
 `;
@@ -28,4 +29,5 @@ height: 46px;
 margin-right: 5px;
 font-size: 16px;
 padding: 0 15px;
+margin-bottom: 10px;
 `;

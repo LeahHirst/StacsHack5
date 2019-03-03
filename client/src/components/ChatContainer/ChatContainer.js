@@ -4,6 +4,7 @@ import { MessageBox } from '..';
 import SuggestionList from '../SuggestionList/SuggestionList';
 import { startTranscribing } from '../../api/Transcription';
 import * as Tts from '../../tts/tts';
+import { getSuggestions } from '../../api/Api';
 
 export default class ChatContainer extends React.Component {
     constructor(props) {
@@ -11,10 +12,18 @@ export default class ChatContainer extends React.Component {
 
         this.state = {
             listening: true,
-            message: ''
+            message: '',
+            suggestions: ['ok', 'yes', 'no'],
+            pause: () => {},
+            resume: () => {}
         }
 
-        startTranscribing(result => {
+        let { pause, resume } = startTranscribing(result => {
+            getSuggestions(result.message, (responses) => {
+                this.setState({
+                    suggestions: responses.map(res => res.text)
+                });
+            });
             if (result.type == 'interim') {
                 this.setState({
                     listening: true,
@@ -26,20 +35,45 @@ export default class ChatContainer extends React.Component {
                     message: result.message
                 })
             }
-        })
+        });
+        this.state.pause = pause;
+        this.state.resume = resume;
     }
 
     speakSuggestion(suggestion) {
-        Tts.textToSpeech(suggestion, function() {
-            // Finished
+        this.state.pause();
+        this.setState({
+            listening: false
         });
+        Tts.textToSpeech(suggestion, function() {
+            let { pause, resume } = startTranscribing(result => {
+                getSuggestions(result.message, (responses) => {
+                    this.setState({
+                        suggestions: responses.map(res => res.text)
+                    });
+                });
+                if (result.type == 'interim') {
+                    this.setState({
+                        listening: true,
+                        message: result.message
+                    });
+                } else {
+                    this.setState({
+                        listening: false,
+                        message: result.message
+                    })
+                }
+            });
+            this.state.pause = pause;
+            this.state.resume = resume;
+        }.bind(this));
     }
 
     render() {
         return (
             <ChatContainerDiv>
                 <MessageBox message={this.state.message} listening={this.state.listening} />
-                <SuggestionList suggestions={[ 'Good, thanks!', 'Not too bad' ]} applySuggestion={this.speakSuggestion.bind(this)} />
+                <SuggestionList suggestions={this.state.suggestions} applySuggestion={this.speakSuggestion.bind(this)} />
             </ChatContainerDiv>
         )
     }
